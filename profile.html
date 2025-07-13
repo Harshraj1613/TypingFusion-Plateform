@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Your Profile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container" style="box-shadow: 0 0 20px #f6f600; background-color: rgb(164, 110, 215);">
+    <button class="back-to-type" onclick="goHome()"><-Back </button>
+        <button id="logout" onclick="logout()">Logout</button>
+        <h2 class="your-profile">Your Profile</h2>
+        <div class="profile-container">
+          <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+
+          <div class="avatar" id="avatar-preview" onclick="document.getElementById('avatar-input').click();">
+            <p class="edit-avatar-text"></p>
+
+          </div>
+
+          <span id="uid"></span>
+        </div>
+        <div class="chart-section">
+          <div class="badge" id="wpmBadge">
+            <span id="wpmValue">0</span> WPM
+          </div>
+          <div class="badge" id="accuracyBadge">
+            <span id="accuracyValue">0</span>% Accuracy
+          </div>
+        </div>
+  </div>
+
+  <script>
+    window.onload = function () {
+      const uid = localStorage.getItem("currentUser");
+      const data = JSON.parse(localStorage.getItem(uid));
+
+      if (!uid || !data) {
+        alert("Please log in first.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      // Show user ID
+      document.getElementById("uid").innerText = uid;
+
+      // Get performance data
+      const bestWPM = data?.bestWPM || 0;
+      const bestAcc = data?.bestAccuracy || 0;
+
+      document.getElementById("wpmValue").innerText = bestWPM;
+      document.getElementById("accuracyValue").innerText = bestAcc;
+
+      // Set avatar if already saved
+      const avatarPreview = document.getElementById("avatar-preview");
+      if (data.avatar) {
+        avatarPreview.style.backgroundImage = `url('${data.avatar}')`;
+      }
+
+      // Avatar upload
+      const input = document.getElementById("avatar-input");
+      if (input && avatarPreview) {
+        input.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const imageURL = e.target.result;
+
+              // Set preview
+              avatarPreview.style.backgroundImage = `url('${imageURL}')`;
+
+              // Save in localStorage under current user's data
+              const updatedUserData = {
+                ...data,
+                avatar: imageURL
+              };
+              localStorage.setItem(uid, JSON.stringify(updatedUserData));
+            };
+            reader.readAsDataURL(file);
+          } else {
+            alert("Please select a valid image file.");
+          }
+        });
+      }
+
+      // Logout
+      window.logout = function () {
+        localStorage.removeItem("currentUser");
+        window.location.href = "index.html";
+      };
+
+      // Go to tester
+      window.goHome = function () {
+        window.location.href = "tester.html";
+      };
+    };
+  </script>
+
+
+
+
+  <footer class="footer">
+    <p> ✨ Keep typing,</p>
+    <p>🫡 keep improving.</p>
+    <p>You're doing great!👍</p>
+  </footer>
+
+</body>
+
+</html>

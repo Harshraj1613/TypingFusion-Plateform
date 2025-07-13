@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Typing App Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    
+  background: linear-gradient(to right, #0a0c33, #2537ac, #b0a2ec);
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      background: #fff;
+      border: 2px solid rgb(255, 255, 255);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 40px #0a0a0a;
+      text-align: center;
+      background-color: rgba(0, 128, 153, 0.482);
+
+    }
+
+        @keyframes fadeSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      font-size: xx-large;
+      min-height: 1.5em;
+      margin-bottom: 30px;
+      font-weight: bold;
+      color: rgb(0, 0, 0);
+    }
+
+    input {
+      width: 50%;
+      padding: 10px;
+      margin: 10px 25%;
+      font-style: normal;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+            font-size: 16px;
+      transition: all 1s ease;
+    }
+
+    button {
+      margin: 10px 0px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+      background-color: #00ff08e1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0000cc;
+      transform: scale(1.03);
+    }
+
+    .separator {
+      margin: 15px 0;
+      font-weight: bold;
+      font-size: x-large;
+      color: aqua;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2 id="heading" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Welcome to TypingFusion Platform</h2>
+
+    <input type="text" id="user-id" placeholder="User ID" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+
+    <div class="separator">OR</div>
+
+    <button onclick="signup()">Sign Up</button>
+  </div>
+
+  <script>
+    function login() {
+      const uid = document.getElementById("user-id").value.trim();
+      const pwd = document.getElementById("password").value;
+      const data = JSON.parse(localStorage.getItem(uid));
+
+      if (data && data.password === pwd) {
+        localStorage.setItem("currentUser", uid);
+        window.location.href = "tester.html";
+      } else {
+        alert("Invalid credentials. Please try again.");
+      }
+    }
+
+    // here is the js for typewrite effect 
+    const heading = document.getElementById("heading");
+    const text = " Welcome to TypingFusion Platform";
+    let index = 0;
+
+    function typeWriter() {
+      if (index < text.length) {
+        heading.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeWriter, 50); // typing speed
+      } else {
+       
+        setTimeout(() => {
+          heading.textContent = "";
+          index = 0;
+          typeWriter(); // restart typing
+        }, 2000); 
+      }
+    }
+
+    // Start the effect
+    typeWriter();
+
+    // Clear heading text and start typing
+    heading.textContent = "";
+    typeWriter();
+
+    function signup() {
+      const uid = document.getElementById("user-id").value.trim();
+      const pwd = document.getElementById("password").value;
+
+      if (uid && pwd) {
+        if (localStorage.getItem(uid)) {
+          alert("User ID already exists.");
+        } else {
+          localStorage.setItem(
+            uid,
+            JSON.stringify({ password: pwd, bestWPM: 0, bestAccuracy: 0 })
+          );
+          alert("Signup successful. You can now log in.");
+        }
+      } else {
+        alert("Please fill both User ID and Password.");
+      }
+    }
+  </script>
+</body>
+
+</html>
